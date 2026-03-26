@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { getGroupData, addMember, addExpense, deleteExpense, startPolling } from '../utils/api'
-import type { Member, Expense, GroupData } from '../utils/api'
+import type { Member, Expense } from '../utils/api'
 import { setCurrentGroup } from '../utils/groupSession'
 
 const GroupLedger = () => {

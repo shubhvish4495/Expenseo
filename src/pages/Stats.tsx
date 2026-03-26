@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { getGroupBalances } from '../utils/api'
-import type { MemberBalance, Settlement, BalanceData } from '../utils/api'
+import type { BalanceData } from '../utils/api'
 import { getCurrentGroupName } from '../utils/groupSession'
 import {
   Chart as ChartJS,

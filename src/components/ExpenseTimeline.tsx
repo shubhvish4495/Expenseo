@@ -2,11 +2,12 @@ import { Expense, Member } from '../utils/api'
 
 interface ExpenseTimelineProps {
   expenses: Expense[]
-  members: Member[]
+  _members: Member[]
   onDeleteExpense?: (expenseId: string) => void
 }
 
-const ExpenseTimeline = ({ expenses, members, onDeleteExpense }: ExpenseTimelineProps) => {
+// @ts-ignore: _members parameter reserved for future use
+const ExpenseTimeline = ({ expenses, _members, onDeleteExpense }: ExpenseTimelineProps) => {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
