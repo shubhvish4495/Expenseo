@@ -152,6 +152,15 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
+
+        {/* Create Group Modal */}
+        <CreateGroupModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onCreateGroup={handleModalCreateGroup}
+          existingGroups={groups.map(group => group.groupName)}
+          isCreating={creatingGroup}
+        />
       </>
     )
   }
