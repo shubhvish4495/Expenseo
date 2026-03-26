@@ -266,39 +266,41 @@ const GroupLedger = () => {
         {/* Add Member Form */}
         {isAddingMember && (
           <div className="mb-4 p-4 bg-primary/5 rounded-lg border border-primary/20">
-            <div className="flex gap-3">
+            <div className="space-y-3">
               <input
                 type="text"
                 value={newMemberName}
                 onChange={(e) => setNewMemberName(e.target.value)}
                 placeholder="Member name"
                 disabled={isAddMemberLoading}
-                className="flex-1 px-3 py-2 border border-light-outline bg-light-surface-variant text-light-on-surface rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-3 py-2 border border-light-outline bg-light-surface-variant text-light-on-surface rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter' && !isAddMemberLoading) {
                     handleAddMember()
                   }
                 }}
               />
-              <button
-                onClick={handleAddMember}
-                disabled={isAddMemberLoading || !newMemberName.trim()}
-                className="btn-primary"
-              >
-                {isAddMemberLoading ? 'Adding...' : 'Add'}
-              </button>
-              <button
-                onClick={() => {
-                  setIsAddingMember(false)
-                  setIsAddMemberLoading(false)
-                  setNewMemberName('')
-                  setError(null) // Clear any errors when canceling
-                }}
-                disabled={isAddMemberLoading}
-                className="btn-secondary"
-              >
-                Cancel
-              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleAddMember}
+                  disabled={isAddMemberLoading || !newMemberName.trim()}
+                  className="flex-1 btn-primary"
+                >
+                  {isAddMemberLoading ? 'Adding...' : 'Add'}
+                </button>
+                <button
+                  onClick={() => {
+                    setIsAddingMember(false)
+                    setIsAddMemberLoading(false)
+                    setNewMemberName('')
+                    setError(null) // Clear any errors when canceling
+                  }}
+                  disabled={isAddMemberLoading}
+                  className="flex-1 btn-secondary"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -546,7 +548,7 @@ const GroupLedger = () => {
                 <button
                   onClick={handleAddExpense}
                   disabled={isAddExpenseLoading || !newExpense.description.trim() || !newExpense.amount.trim() || !newExpense.paidBy.trim()}
-                  className="btn-primary"
+                  className="flex-1 btn-primary"
                 >
                   {isAddExpenseLoading ? 'Adding...' : 'Add Expense'}
                 </button>
@@ -565,7 +567,7 @@ const GroupLedger = () => {
                     setError(null) // Clear any errors when canceling
                   }}
                   disabled={isAddExpenseLoading}
-                  className="btn-secondary"
+                  className="flex-1 btn-secondary"
                 >
                   Cancel
                 </button>
