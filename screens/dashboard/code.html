@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-fixed": "#00201d",
+              "error-container": "#ffdad6",
+              "secondary-fixed": "#89f5e7",
+              "surface-container-lowest": "#ffffff",
+              "on-primary": "#ffffff",
+              "background": "#f7f9fb",
+              "surface-container-low": "#f2f4f6",
+              "on-surface": "#191c1e",
+              "outline-variant": "#d4c5ab",
+              "on-background": "#191c1e",
+              "outline": "#827660",
+              "surface-tint": "#795900",
+              "primary": "#795900",
+              "on-primary-fixed-variant": "#5c4300",
+              "tertiary-container": "#04dcff",
+              "surface-bright": "#f7f9fb",
+              "on-tertiary-fixed-variant": "#004e5c",
+              "surface-container": "#eceef0",
+              "on-primary-fixed": "#261a00",
+              "on-error": "#ffffff",
+              "secondary-container": "#86f2e4",
+              "error": "#ba1a1a",
+              "inverse-surface": "#2d3133",
+              "surface-container-high": "#e6e8ea",
+              "surface-variant": "#e0e3e5",
+              "on-secondary-container": "#006f66",
+              "secondary": "#006a61",
+              "surface": "#f7f9fb",
+              "on-tertiary-fixed": "#001f26",
+              "on-surface-variant": "#504532",
+              "tertiary-fixed": "#aaedff",
+              "secondary-fixed-dim": "#6bd8cb",
+              "on-secondary-fixed-variant": "#005049",
+              "on-error-container": "#93000a",
+              "on-tertiary": "#ffffff",
+              "primary-fixed-dim": "#fbbc00",
+              "primary-container": "#ffbf00",
+              "inverse-primary": "#fbbc00",
+              "inverse-on-surface": "#eff1f3",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed-dim": "#00d9fc",
+              "surface-container-highest": "#e0e3e5",
+              "surface-dim": "#d8dadc",
+              "on-tertiary-container": "#005d6d",
+              "primary-fixed": "#ffdfa0",
+              "on-primary-container": "#6d5000",
+              "tertiary": "#006879"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Be Vietnam Pro"],
+              "label": ["Be Vietnam Pro"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f7f9fb;
+            color: #191c1e;
+        }
+        .dark body {
+            background-color: #111314;
+            color: #e2e2e6;
+        }
+        .editorial-shadow {
+            box-shadow: 0 24px 48px -12px rgba(121, 89, 0, 0.08);
+        }
+        .dark .editorial-shadow {
+            box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.4);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background dark:bg-[#111314] text-on-background dark:text-[#e2e2e6] min-h-screen pb-32 transition-colors duration-300">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f7f9fb]/80 dark:bg-[#111314]/80 backdrop-blur-xl flex justify-between items-center px-6 py-4 border-b border-transparent dark:border-white/5">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-amber-50/50 dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-amber-900 dark:text-amber-200" data-icon="menu">menu</span>
+</button>
+<h1 class="text-xl font-extrabold text-amber-900 dark:text-amber-200 font-['Plus_Jakarta_Sans'] tracking-tight">Editorial Escape</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-amber-50/50 dark:hover:bg-white/10 transition-colors text-amber-900 dark:text-amber-200" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-symbols-outlined dark:hidden" data-icon="dark_mode">dark_mode</span>
+<span class="material-symbols-outlined hidden dark:block" data-icon="light_mode">light_mode</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-container-highest dark:border-white/10">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="Close-up portrait of a stylish man with sunglasses smiling warmly in soft Mediterranean sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnQu6vTAXAX7AmFZdHcJBJJQU8vtRd1Depxer_N_LMoq_sgqxegFcHcktO_QNop61O7gs2wvcx7J6pOpKfbrip1crLGc9LR3S0r5jm5BRFbkdR5hbQV1oY-UMo5I8JTh8eDAF90Pdhb2gVyCNFphzaHJHHaPAv0w8o_jQrvHUXFWMiYroc4Nz3G4ycdB6ldfcR9AxLtonkD9s6y21YwPb48C2KccZ2LLPbL8l6SSEF_JIym5Nu1vrXaR0l-v0r2HnkPAL-h4eH3Vs4"/>
+</div>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-2xl mx-auto space-y-10">
+<!-- Summary Section: Bento Style -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-gradient-to-br from-primary to-primary-container dark:from-amber-600 dark:to-amber-500 p-8 rounded-xl editorial-shadow text-white relative overflow-hidden flex flex-col justify-between h-48">
+<div class="z-10">
+<p class="font-label text-sm opacity-90 font-medium">Total Group Spend</p>
+<h2 class="text-4xl font-headline font-extrabold tracking-tighter mt-1"> $4,820.50</h2>
+</div>
+<div class="z-10 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="group">group</span>
+<span class="font-label text-xs font-semibold tracking-wide uppercase">Amalfi Coast Trip</span>
+</div>
+<!-- Abstract Sun Decor -->
+<div class="absolute -right-12 -top-12 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+</div>
+<div class="bg-surface-container-low dark:bg-[#1d2021] p-8 rounded-xl flex flex-col justify-between h-48 border border-transparent dark:border-white/5">
+<div>
+<p class="font-label text-sm text-on-surface-variant dark:text-white/60 font-medium">Your Balance</p>
+<h2 class="text-4xl font-headline font-extrabold tracking-tighter mt-1 text-secondary dark:text-[#89f5e7]">+$240.15</h2>
+</div>
+<div class="flex items-center gap-2 text-secondary dark:text-[#89f5e7]">
+<span class="material-symbols-outlined text-[18px]" data-icon="trending_up">trending_up</span>
+<span class="font-label text-xs font-bold">You're owed money</span>
+</div>
+</div>
+</section>
+<!-- Group Members Horizontal Scroll -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-headline text-lg font-bold text-on-surface dark:text-white">Fellow Explorers</h3>
+<button class="text-primary dark:text-amber-400 font-bold text-sm">Add New</button>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+<!-- Member Pill: Active/Me -->
+<div class="flex items-center gap-3 bg-white dark:bg-[#2d3133] px-4 py-2.5 rounded-full shadow-sm border border-outline-variant/10 dark:border-white/10 shrink-0">
+<img alt="User" class="w-8 h-8 rounded-full object-cover" data-alt="Profile photo of a man wearing a beige linen shirt against a soft bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTYsDdvuBIYnjlCsL6SlQnTAqEY8uzH6lmBwqTCylsPMJ9sWQsp1fkexqXUdfkrEfSNNChqy53rgYvvUulAa3aPCjY7WZM8ulh3oqHP7a9RRHHSDLEGTgWPt5LPsIiWyjyk8ejBVF4xkdIOUQU9U9ooEdLcYIhrmr5RJiFR30_AM8CXurXNOXo5grqx4bbw_2l91T01Oijk6_ZApS7vqSdACdxmYdt3Z5CIiFalh0SpZh8bioeZQ3hGdHK-L0ubuZumg80Da9RVcpC"/>
+<span class="text-sm font-semibold text-on-surface dark:text-white">Me</span>
+</div>
+<!-- Member Pill -->
+<div class="flex items-center gap-3 bg-surface-container-lowest dark:bg-[#1d2021] px-4 py-2.5 rounded-full shadow-sm shrink-0 border border-transparent dark:border-white/5">
+<img alt="Sarah" class="w-8 h-8 rounded-full object-cover" data-alt="Portrait of a woman with braided hair smiling in warm outdoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIPsz29YQfjA0064Ya5IEiTv21Zhmd360XEUOBwoZaS4EVZVttQeXyy1uMkPL-rIInHV584eQuvrRbbR1VHi1jQ8Yv3Q9MLC9Z4FgyVHKkuE7oQ8Tcv8QjjpXgPIE4hwbtnrkK99E8t30LimjVCd3GFwnGc_K-MJSc-ARHGqPHYQndG5_J82cGJwhv61uMimtccehtP9xNa4xWr-o1BQHprHXGv1LCD9klX5A4CWR3ZL-XEDXeAzbcqZYIPnd1MSsRDdblL1Ez46h"/>
+<span class="text-sm font-medium text-on-surface-variant dark:text-white/70">Sarah</span>
+</div>
+<!-- Member Pill -->
+<div class="flex items-center gap-3 bg-surface-container-lowest dark:bg-[#1d2021] px-4 py-2.5 rounded-full shadow-sm shrink-0 border border-transparent dark:border-white/5">
+<img alt="Marcus" class="w-8 h-8 rounded-full object-cover" data-alt="Candid shot of a man laughing outdoors near architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaHNmONm4eKwmFXKq_sWDhkcBYuKyMI_-yarln-GzhezvPJqLdyICDk1dsBg30GwKsL8Zziun7bpHKdiuz5w9Ln4gf_2alhcv5E_QsuZ1tc3cesJbMg8GMIoV0za2Px0uYjQknz5XIbJ7lg2rr0usP9YSGXbTSl8KN-P2du7-05MXqMrN_tLO6tMVpQOc4lMLTsKgm8AKQF5Akn_ud-BqbRnbyI8Hh1L2eVdCk2Ci-Hy05DIqxusM5JAWYOU2fkDDlGq6qI16jZ1-l"/>
+<span class="text-sm font-medium text-on-surface-variant dark:text-white/70">Marcus</span>
+</div>
+<!-- Member Pill -->
+<div class="flex items-center gap-3 bg-surface-container-lowest dark:bg-[#1d2021] px-4 py-2.5 rounded-full shadow-sm shrink-0 border border-transparent dark:border-white/5">
+<img alt="Elena" class="w-8 h-8 rounded-full object-cover" data-alt="Portrait of a woman with a wide brim hat and sunglasses at a beach setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdRYOiFFA6adRa_i234yp69H3GbwNdqcGCZiqEpGrpP3-uagR6lM0TYkrvLSGWxI8kS3j18F4m36y7SDgrJ9rj_-PLz-cJDb3H4rkykgOUMp6CVS9JOCsyB7xv-QSJxmwEjCZcT31fv3ZYQQ1B_13d_3jPluHRxdBqu7i-qBuuurlLseTDYXramqwcWqoOliUI8oY2xaUvqUG2r_oieIkSrjzbrfCwjNp9CgWHQQp2onD3JbxTMFGKFILQNT6kTxwbV1QQ12T9yaQf"/>
+<span class="text-sm font-medium text-on-surface-variant dark:text-white/70">Elena</span>
+</div>
+</div>
+</section>
+<!-- Expense Timeline -->
+<section class="space-y-6">
+<h3 class="font-headline text-lg font-bold text-on-surface dark:text-white">Recent Expenses</h3>
+<div class="space-y-4">
+<!-- Timeline Item 1 -->
+<div class="flex gap-6 group">
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-secondary-container dark:bg-secondary/20 flex items-center justify-center text-on-secondary-container dark:text-secondary-fixed">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+</div>
+<div class="w-0.5 grow bg-surface-variant dark:bg-white/10 rounded-full group-last:hidden"></div>
+</div>
+<div class="pb-8 grow">
+<div class="bg-white dark:bg-[#1d2021] p-6 rounded-lg editorial-shadow flex items-center justify-between border border-transparent dark:border-white/5">
+<div class="space-y-1">
+<h4 class="font-headline font-bold text-on-surface dark:text-white">La Sponda Lunch</h4>
+<p class="text-xs font-medium text-on-surface-variant dark:text-white/60 flex items-center gap-1">
+                                    Paid by <span class="text-primary dark:text-amber-400 font-bold">Marcus</span> • Oct 14
+                                </p>
+</div>
+<div class="text-right">
+<p class="font-headline font-extrabold text-lg dark:text-white">$342.00</p>
+<p class="text-[10px] font-bold text-on-surface-variant dark:text-white/40 uppercase tracking-widest">Shared by 4</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="flex gap-6 group">
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-tertiary-container dark:bg-tertiary/20 flex items-center justify-center text-on-tertiary-container dark:text-tertiary-fixed">
+<span class="material-symbols-outlined" data-icon="hotel">hotel</span>
+</div>
+<div class="w-0.5 grow bg-surface-variant dark:bg-white/10 rounded-full group-last:hidden"></div>
+</div>
+<div class="pb-8 grow">
+<div class="bg-white dark:bg-[#1d2021] p-6 rounded-lg editorial-shadow flex items-center justify-between border border-transparent dark:border-white/5">
+<div class="space-y-1">
+<h4 class="font-headline font-bold text-on-surface dark:text-white">Villa Airbnb Deposit</h4>
+<p class="text-xs font-medium text-on-surface-variant dark:text-white/60 flex items-center gap-1">
+                                    Paid by <span class="text-primary dark:text-amber-400 font-bold">Me</span> • Oct 12
+                                </p>
+</div>
+<div class="text-right">
+<p class="font-headline font-extrabold text-lg dark:text-white">$1,200.00</p>
+<p class="text-[10px] font-bold text-on-surface-variant dark:text-white/40 uppercase tracking-widest">Shared by 4</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="flex gap-6 group">
+<div class="flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-primary-container dark:bg-primary/20 flex items-center justify-center text-on-primary-container dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined" data-icon="directions_boat">directions_boat</span>
+</div>
+<div class="w-0.5 grow bg-surface-variant dark:bg-white/10 rounded-full group-last:hidden"></div>
+</div>
+<div class="pb-8 grow">
+<div class="bg-white dark:bg-[#1d2021] p-6 rounded-lg editorial-shadow flex items-center justify-between border border-transparent dark:border-white/5">
+<div class="space-y-1">
+<h4 class="font-headline font-bold text-on-surface dark:text-white">Boat Tour Amalfi</h4>
+<p class="text-xs font-medium text-on-surface-variant dark:text-white/60 flex items-center gap-1">
+                                    Paid by <span class="text-primary dark:text-amber-400 font-bold">Elena</span> • Oct 12
+                                </p>
+</div>
+<div class="text-right">
+<p class="font-headline font-extrabold text-lg dark:text-white">$560.00</p>
+<p class="text-[10px] font-bold text-on-surface-variant dark:text-white/40 uppercase tracking-widest">Shared by 4</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Contextual FAB Container -->
+<div class="fixed bottom-32 left-0 w-full px-6 flex justify-center z-40">
+<button class="bg-gradient-to-r from-primary to-primary-container dark:from-amber-600 dark:to-amber-500 text-white px-8 py-4 rounded-full font-headline font-bold text-lg shadow-xl flex items-center gap-3 hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="add" style="font-variation-settings: 'FILL' 1;">add</span>
+            Log New Expense
+        </button>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-[#f7f9fb]/80 dark:bg-[#111314]/80 backdrop-blur-xl rounded-t-[3rem] z-50 shadow-[0_-4px_24px_rgba(121,89,0,0.04)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.3)] border-t border-transparent dark:border-white/5">
+<a class="flex flex-col items-center justify-center text-[#504532] dark:text-white/60 px-5 py-1.5 hover:text-amber-700 dark:hover:text-amber-400 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+<span class="font-['Be_Vietnam_Pro'] text-[11px] font-medium mt-1">Trips</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-amber-100 dark:bg-amber-900 text-amber-900 dark:text-amber-100 rounded-full px-5 py-1.5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-['Be_Vietnam_Pro'] text-[11px] font-medium mt-1">Ledger</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#504532] dark:text-white/60 px-5 py-1.5 hover:text-amber-700 dark:hover:text-amber-400 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-['Be_Vietnam_Pro'] text-[11px] font-medium mt-1">Stats</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#504532] dark:text-white/60 px-5 py-1.5 hover:text-amber-700 dark:hover:text-amber-400 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Be_Vietnam_Pro'] text-[11px] font-medium mt-1">Settings</span>
+</a>
+</nav>
+</body></html>
