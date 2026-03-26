@@ -11,7 +11,7 @@ const Header = () => {
           to="/"
           className="text-xl font-extrabold text-secondary font-headline tracking-tight hover:text-secondary/80 transition-colors cursor-pointer"
         >
-          Editorial Escape
+          Expenseo
         </Link>
       </div>
 
