@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom'
 const Header = () => {
   return (
     <header className="fixed top-0 w-full z-50 bg-white/80 glass-blur flex justify-between items-center px-6 py-4 border-b border-gray-100/50">
-      <div className="flex items-center gap-4">
-        <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
-          <span className="material-symbols-outlined text-secondary">menu</span>
-        </button>
+      <div className="flex items-center">
         <Link
           to="/"
           className="text-xl font-extrabold text-secondary font-headline tracking-tight hover:text-secondary/80 transition-colors cursor-pointer"

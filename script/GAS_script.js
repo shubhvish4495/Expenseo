@@ -1,6 +1,10 @@
 /**
  * Google Apps Script Web App for Expense Tracker
  *
+ * IMPORTANT: Sheet naming and operations now use unique groupId instead of groupName
+ * to prevent conflicts when multiple groups have the same name. All operations
+ * support both groupId (recommended) and groupName (deprecated for backward compatibility).
+ *
  * API Endpoints (all via POST with JSON payload):
  *
  * GET_DASHBOARD
@@ -14,27 +18,33 @@
  *   Response: { "status": "success", "data": { "groupId": string, "groupName": string } }
  *
  * ADD_EXPENSE
- *   Payload: { "groupName": string, "paidBy": string, "amount": number, "description": string, "fractions": object }
+ *   Payload: { "groupId": string, "paidBy": string, "amount": number, "description": string, "fractions": object }
+ *            OR { "groupName": string, "paidBy": string, "amount": number, "description": string, "fractions": object } [deprecated]
  *   Response: { "status": "success", "data": { "expenseId": string } }
  *
  * ADD_MEMBER
- *   Payload: { "groupName": string, "memberName": string }
+ *   Payload: { "groupId": string, "memberName": string }
+ *            OR { "groupName": string, "memberName": string } [deprecated]
  *   Response: { "status": "success", "data": { "memberName": string } }
  *
  * GET_GROUP_DATA
- *   Payload: { "groupName": string }
- *   Response: { "status": "success", "data": { "expenses": [...], "members": [...] } }
+ *   Payload: { "groupId": string }
+ *            OR { "groupName": string } [deprecated]
+ *   Response: { "status": "success", "data": { "expenses": [...], "members": [...], "groupId": string, "groupName": string } }
  *
  * GET_GROUP_BALANCES
- *   Payload: { "groupName": string }
+ *   Payload: { "groupId": string }
+ *            OR { "groupName": string } [deprecated]
  *   Response: { "status": "success", "data": { "balances": [...], "settlements": [...] } }
  *
  * DELETE_EXPENSE
- *   Payload: { "groupName": string, "expenseId": string }
+ *   Payload: { "groupId": string, "expenseId": string }
+ *            OR { "groupName": string, "expenseId": string } [deprecated]
  *   Response: { "status": "success", "data": { "expenseId": string } }
  *
  * DELETE_MEMBER
- *   Payload: { "groupName": string, "memberName": string }
+ *   Payload: { "groupId": string, "memberName": string }
+ *            OR { "groupName": string, "memberName": string } [deprecated]
  *   Response: { "status": "success", "data": { "memberName": string } }
  *
  * Error Response Format:
@@ -69,9 +79,19 @@ function doPost(e) {
     } else if (action === "ADD_MEMBER") {
       resultData = addMember(payload);
     } else if (action === "GET_GROUP_DATA") {
-      resultData = getGroupData(payload.groupName);
+      // Support both groupId and groupName
+      const groupIdentifier = payload.groupId || payload.groupName;
+      if (!groupIdentifier) {
+        throw new Error("Either groupId or groupName must be provided.");
+      }
+      resultData = getGroupData(groupIdentifier);
     } else if (action === "GET_GROUP_BALANCES") {
-      resultData = getGroupBalances(payload.groupName);
+      // Support both groupId and groupName
+      const groupIdentifier = payload.groupId || payload.groupName;
+      if (!groupIdentifier) {
+        throw new Error("Either groupId or groupName must be provided.");
+      }
+      resultData = getGroupBalances(groupIdentifier);
     } else if (action === "DELETE_EXPENSE") {
       resultData = deleteExpense(payload);
     } else if (action === "DELETE_MEMBER") {
@@ -136,6 +156,69 @@ function doGet() {
       }))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+// --- HELPER FUNCTIONS ---
+
+/**
+ * Get groupId from groupName by looking up the Index sheet
+ * @param {string} groupName - The group name to look up
+ * @returns {string|null} The groupId if found, null otherwise
+ */
+function getGroupIdFromName(groupName) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const indexSheet = ss.getSheetByName("Index");
+
+  if (!indexSheet) return null;
+
+  const dataRange = indexSheet.getDataRange();
+  if (dataRange.getNumRows() <= 1) return null;
+
+  const allData = dataRange.getValues();
+
+  // Look for matching groupName (case-sensitive)
+  for (let i = 1; i < allData.length; i++) {
+    if (allData[i][1] === groupName) {
+      return allData[i][0]; // Return groupId
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Get groupName from groupId by looking up the Index sheet
+ * @param {string} groupId - The group ID to look up
+ * @returns {string|null} The groupName if found, null otherwise
+ */
+function getGroupNameFromId(groupId) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const indexSheet = ss.getSheetByName("Index");
+
+  if (!indexSheet) return null;
+
+  const dataRange = indexSheet.getDataRange();
+  if (dataRange.getNumRows() <= 1) return null;
+
+  const allData = dataRange.getValues();
+
+  // Look for matching groupId
+  for (let i = 1; i < allData.length; i++) {
+    if (allData[i][0] === groupId) {
+      return allData[i][1]; // Return groupName
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Check if a groupId exists in the Index sheet
+ * @param {string} groupId - The group ID to check
+ * @returns {boolean} True if the group exists, false otherwise
+ */
+function groupExists(groupId) {
+  return getGroupNameFromId(groupId) !== null;
 }
 
 // --- CORE CRUD FUNCTIONS ---
@@ -216,28 +299,49 @@ function createNewGroup(payload) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const groupName = payload.groupName;
   const groupId = Utilities.getUuid(); // Generate a unique ID
-  
+
   // 1. Log the group in the Index sheet
-  const indexSheet = ss.getSheetByName("Index");
+  let indexSheet;
+  try {
+    indexSheet = ss.getSheetByName("Index");
+  } catch (error) {
+    // Create Index sheet if it doesn't exist
+    indexSheet = ss.insertSheet("Index");
+    indexSheet.appendRow(["GroupID", "GroupName", "CreatedDate"]);
+  }
   indexSheet.appendRow([groupId, groupName, new Date().toISOString()]);
-  
-  // 2. Create the Expenses tab for this group
-  const expensesSheet = ss.insertSheet(`${groupName}_Expenses`);
+
+  // 2. Create the Expenses tab for this group (using groupId for sheet naming)
+  const expensesSheet = ss.insertSheet(`${groupId}_Expenses`);
   expensesSheet.appendRow(["ExpenseID", "Timestamp", "PaidBy", "Amount", "Description", "Fractions"]);
-  
-  // 3. Create the Members tab for this group
-  const membersSheet = ss.insertSheet(`${groupName}_Members`);
+
+  // 3. Create the Members tab for this group (using groupId for sheet naming)
+  const membersSheet = ss.insertSheet(`${groupId}_Members`);
   membersSheet.appendRow(["MemberName", "JoinDate"]);
-  
+
   return { groupId: groupId, groupName: groupName };
 }
 
 function addExpense(payload) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(`${payload.groupName}_Expenses`);
-  
-  if (!sheet) throw new Error("Group does not exist.");
-  
+
+  // Support both groupId and groupName for backward compatibility
+  let groupId = payload.groupId;
+  if (!groupId && payload.groupName) {
+    groupId = getGroupIdFromName(payload.groupName);
+    if (!groupId) throw new Error("Group does not exist.");
+  } else if (!groupId) {
+    throw new Error("Either groupId or groupName must be provided.");
+  }
+
+  // Verify group exists
+  if (!groupExists(groupId)) {
+    throw new Error("Group does not exist.");
+  }
+
+  const sheet = ss.getSheetByName(`${groupId}_Expenses`);
+  if (!sheet) throw new Error("Expenses sheet not found for this group.");
+
   const expenseId = Utilities.getUuid();
   sheet.appendRow([
     expenseId,
@@ -247,26 +351,50 @@ function addExpense(payload) {
     payload.description,
     JSON.stringify(payload.fractions) // Save split logic as a string
   ]);
-  
+
   return { expenseId: expenseId };
 }
 
 function addMember(payload) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(`${payload.groupName}_Members`);
-  
-  if (!sheet) throw new Error("Group does not exist.");
-  
+
+  // Support both groupId and groupName for backward compatibility
+  let groupId = payload.groupId;
+  if (!groupId && payload.groupName) {
+    groupId = getGroupIdFromName(payload.groupName);
+    if (!groupId) throw new Error("Group does not exist.");
+  } else if (!groupId) {
+    throw new Error("Either groupId or groupName must be provided.");
+  }
+
+  // Verify group exists
+  if (!groupExists(groupId)) {
+    throw new Error("Group does not exist.");
+  }
+
+  const sheet = ss.getSheetByName(`${groupId}_Members`);
+  if (!sheet) throw new Error("Members sheet not found for this group.");
+
   sheet.appendRow([payload.memberName, new Date().toISOString()]);
   return { memberName: payload.memberName };
 }
 
-function getGroupData(groupName) {
+function getGroupData(groupIdentifier) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const expensesSheet = ss.getSheetByName(`${groupName}_Expenses`);
-  const membersSheet = ss.getSheetByName(`${groupName}_Members`);
 
-  if (!expensesSheet || !membersSheet) throw new Error("Group not found.");
+  // Support both groupId and groupName for backward compatibility
+  let groupId = groupIdentifier;
+
+  // If the identifier doesn't exist as a groupId, try it as a groupName
+  if (!groupExists(groupId)) {
+    groupId = getGroupIdFromName(groupIdentifier);
+    if (!groupId) throw new Error("Group not found.");
+  }
+
+  const expensesSheet = ss.getSheetByName(`${groupId}_Expenses`);
+  const membersSheet = ss.getSheetByName(`${groupId}_Members`);
+
+  if (!expensesSheet || !membersSheet) throw new Error("Group sheets not found.");
 
   // Fetch all data excluding the header row
   const expensesData = expensesSheet.getDataRange().getValues().slice(1);
@@ -290,18 +418,20 @@ function getGroupData(groupName) {
 
   return {
     expenses: expenses,
-    members: members
+    members: members,
+    groupId: groupId,
+    groupName: getGroupNameFromId(groupId)
   };
 }
 
 /**
  * Calculate outstanding balances for a group
- * @param {string} groupName - The name of the group
+ * @param {string} groupIdentifier - The groupId or groupName of the group
  * @returns {Object} Object containing member balances and settlement plan
  */
-function getGroupBalances(groupName) {
+function getGroupBalances(groupIdentifier) {
   try {
-    const groupData = getGroupData(groupName);
+    const groupData = getGroupData(groupIdentifier);
     const expenses = groupData.expenses;
     const members = groupData.members;
 
@@ -424,14 +554,28 @@ function calculateSettlements(balances) {
 
 /**
  * Delete an expense from a group
- * @param {Object} payload - Contains groupName and expenseId
+ * @param {Object} payload - Contains groupId/groupName and expenseId
  * @returns {Object} Object containing the deleted expense ID
  */
 function deleteExpense(payload) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(`${payload.groupName}_Expenses`);
 
-  if (!sheet) throw new Error("Group does not exist.");
+  // Support both groupId and groupName for backward compatibility
+  let groupId = payload.groupId;
+  if (!groupId && payload.groupName) {
+    groupId = getGroupIdFromName(payload.groupName);
+    if (!groupId) throw new Error("Group does not exist.");
+  } else if (!groupId) {
+    throw new Error("Either groupId or groupName must be provided.");
+  }
+
+  // Verify group exists
+  if (!groupExists(groupId)) {
+    throw new Error("Group does not exist.");
+  }
+
+  const sheet = ss.getSheetByName(`${groupId}_Expenses`);
+  if (!sheet) throw new Error("Expenses sheet not found for this group.");
 
   const expenseId = payload.expenseId;
   const dataRange = sheet.getDataRange();
@@ -458,14 +602,28 @@ function deleteExpense(payload) {
 
 /**
  * Delete a member from a group
- * @param {Object} payload - Contains groupName and memberName
+ * @param {Object} payload - Contains groupId/groupName and memberName
  * @returns {Object} Object containing the deleted member name
  */
 function deleteMember(payload) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(`${payload.groupName}_Members`);
 
-  if (!sheet) throw new Error("Group does not exist.");
+  // Support both groupId and groupName for backward compatibility
+  let groupId = payload.groupId;
+  if (!groupId && payload.groupName) {
+    groupId = getGroupIdFromName(payload.groupName);
+    if (!groupId) throw new Error("Group does not exist.");
+  } else if (!groupId) {
+    throw new Error("Either groupId or groupName must be provided.");
+  }
+
+  // Verify group exists
+  if (!groupExists(groupId)) {
+    throw new Error("Group does not exist.");
+  }
+
+  const sheet = ss.getSheetByName(`${groupId}_Members`);
+  if (!sheet) throw new Error("Members sheet not found for this group.");
 
   const memberName = payload.memberName;
   const dataRange = sheet.getDataRange();
@@ -485,7 +643,7 @@ function deleteMember(payload) {
   }
 
   // Check if member has any expenses before deleting
-  const expensesSheet = ss.getSheetByName(`${payload.groupName}_Expenses`);
+  const expensesSheet = ss.getSheetByName(`${groupId}_Expenses`);
   if (expensesSheet) {
     const expensesData = expensesSheet.getDataRange().getValues();
 

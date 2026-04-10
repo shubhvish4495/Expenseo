@@ -44,7 +44,7 @@ const SummaryCards = ({ data }: SummaryCardsProps) => {
           <h2 className={`text-4xl font-headline font-extrabold tracking-tighter mt-1 ${
             data.userBalance >= 0 ? 'text-teal-600' : 'text-red-600'
           }`}>
-            {data.userBalance >= 0 ? '+' : ''}{formatCurrency(Math.abs(data.userBalance))}
+            {data.userBalance >= 0 ? `+${formatCurrency(data.userBalance)}` : `-${formatCurrency(Math.abs(data.userBalance))}`}
           </h2>
         </div>
         <div className={`flex items-center gap-2 ${

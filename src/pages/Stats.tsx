@@ -454,7 +454,9 @@ const Stats = () => {
                           ? 'text-green-600'
                           : 'text-red-600'
                       }`}>
-                        {balance.netBalance >= 0 ? '+' : ''}${balance.netBalance.toFixed(2)}
+                        {balance.netBalance >= 0
+                          ? `+$${balance.netBalance.toFixed(2)}`
+                          : `-$${Math.abs(balance.netBalance).toFixed(2)}`}
                       </div>
                       <p className="text-xs text-light-on-surface-variant">
                         {balance.netBalance >= 0 ? 'Is owed' : 'Owes'}
