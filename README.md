@@ -29,8 +29,8 @@ A lightweight, mobile-first SPA for tracking shared travel expenses. Create trip
 ### 1. Clone the repo
 
 ```bash
-git clone <repo-url>
-cd expense-tracker-2026
+git clone https://github.com/shubhvish4495/Expenseo
+cd Expenseo
 npm install
 ```
 
