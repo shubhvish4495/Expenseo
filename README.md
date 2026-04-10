@@ -1,5 +1,7 @@
 # Expenseo — Travel Expense Manager
 
+<img src="assets/images/logo.png" alt="Expenseo logo"/>
+
 A lightweight, mobile-first SPA for tracking shared travel expenses. Create trip groups, add members, log expenses, and see who owes what — no login required.
 
 **Stack:** React + Vite + TypeScript · Tailwind CSS · Google Apps Script · Google Sheets
